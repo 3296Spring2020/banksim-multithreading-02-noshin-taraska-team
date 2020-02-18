@@ -1,4 +1,8 @@
 package edu.temple.cis.c3238.banksim;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ExecutorService; 
+import java.util.concurrent.Executors; 
+import java.util.*;
 
 /**
  * @author Cay Horstmann
@@ -11,6 +15,7 @@ public class Account {
 
     private volatile int balance;
     private final int id;
+    public final ReentrantLock lock = new ReentrantLock();
 
     public Account(int id, int initialBalance) {
         this.id = id;
@@ -45,3 +50,5 @@ public class Account {
         return String.format("Account[%d] balance %d", id, balance);
     }
 }
+
+
