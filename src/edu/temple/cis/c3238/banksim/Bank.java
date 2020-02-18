@@ -1,5 +1,5 @@
 package edu.temple.cis.c3238.banksim;
-
+import java.util.*;
 /**
  * @author Cay Horstmann
  * @author Modified by Paul Wolfgang
@@ -15,6 +15,8 @@ public class Bank {
     private long numTransactions = 0;
     private final int initialBalance;
     private final int numAccounts;
+    
+    
 
     public Bank(int numAccounts, int initialBalance) {
         this.initialBalance = initialBalance;
@@ -26,11 +28,30 @@ public class Bank {
         numTransactions = 0;
     }
 
-    public void transfer(int from, int to, int amount) {
+    public void transfer(int from, int to, int amount) throws  InterruptedException{
         // accounts[from].waitForAvailableFunds(amount);
-        if (accounts[from].withdraw(amount)) {
-            accounts[to].deposit(amount);
+        
+        while(true){
+            if(accounts[from].lock.tryLock()){
+                try{
+                    if(accounts[to].lock.tryLock()){
+                        try{
+                            if (accounts[from].withdraw(amount)) {
+                                accounts[to].deposit(amount);
+                        }
+                        break;
+                        } finally {
+                            accounts[to].lock.unlock();
+                        }
+                    }
+                } finally{
+                    accounts[from].lock.unlock();
+                }
+            }
+            
+            
         }
+        
         
         // Uncomment line when race condition in test() is fixed.
         // if (shouldTest()) test();
