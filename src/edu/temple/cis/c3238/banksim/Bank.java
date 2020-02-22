@@ -31,30 +31,13 @@ public class Bank {
     public void transfer(int from, int to, int amount) throws  InterruptedException{
         // accounts[from].waitForAvailableFunds(amount);
         
-        while(true){
-            if(accounts[from].lock.tryLock()){
-                try{
-                    if(accounts[to].lock.tryLock()){
-                        try{
-                            if (accounts[from].withdraw(amount)) {
-                                accounts[to].deposit(amount);
-                        }
-                        break;
-                        } finally {
-                            accounts[to].lock.unlock();
-                        }
-                    }
-                } finally{
-                    accounts[from].lock.unlock();
-                }
-            }
-            
-            
-        }
-        
+      
+       if (accounts[from].withdraw(amount)) {
+        accounts[to].deposit(amount);
+       }
         
         // Uncomment line when race condition in test() is fixed.
-        // if (shouldTest()) test();
+         if (shouldTest()) test();
     }
 
     public void test() {
