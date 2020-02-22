@@ -41,19 +41,8 @@ public class Bank {
     }
 
     public void test() {
-        int totalBalance = 0;
-        for (Account account : accounts) {
-            System.out.printf("%-30s %s%n", 
-                    Thread.currentThread().toString(), account.toString());
-            totalBalance += account.getBalance();
-        }
-        System.out.printf("%-30s Total balance: %d\n", Thread.currentThread().toString(), totalBalance);
-        if (totalBalance != numAccounts * initialBalance) {
-            System.out.printf("%-30s Total balance changed!\n", Thread.currentThread().toString());
-            System.exit(0);
-        } else {
-            System.out.printf("%-30s Total balance unchanged.\n", Thread.currentThread().toString());
-        }
+        Thread testThread = new TestingThread(this, this.accounts, this.numAccounts, this.initialBalance);
+        testThread.start();
     }
 
     public int getNumAccounts() {
