@@ -25,6 +25,7 @@ class TransferThread extends Thread {
             int amount = (int) (maxAmount * Math.random());
             try{
             bank.transfer(fromAccount, toAccount, amount);
+            doWait();
             }catch (InterruptedException e){
                 
             }
@@ -32,4 +33,23 @@ class TransferThread extends Thread {
 
         System.out.printf("%-30s Account[%d] has finished with its transactions.\n", Thread.currentThread().toString(), fromAccount);
     }
+    
+    public void doWait(){
+    synchronized(bank){
+      try{
+        bank.wait();
+      } catch(InterruptedException e){
+      }
+      }
+    }
+ 
+   
+   
+    public void doNotify(){
+    synchronized(bank){
+        bank.notifyAll();
+    }
+  }
 }
+    
+
