@@ -15,9 +15,12 @@ public class Account {
 
     private volatile int balance;
     private final int id;
-    public final ReentrantLock lock = new ReentrantLock();
+    private Bank myBank;
 
-    public Account(int id, int initialBalance) {
+
+    public Account(Bank mybank, int id, int initialBalance) {
+        
+        this.myBank = mybank;
         this.id = id;
         this.balance = initialBalance;
     }
@@ -29,7 +32,7 @@ public class Account {
     public synchronized boolean withdraw(int amount) {
         if (amount <= balance) {
             int currentBalance = balance;
-            // Thread.yield(); // Try to force collision
+            Thread.yield(); // Try to force collision
             int newBalance = currentBalance - amount;
             balance = newBalance;
             return true;
@@ -40,15 +43,25 @@ public class Account {
 
     public synchronized void deposit(int amount) {
         int currentBalance = balance;
-        // Thread.yield();   // Try to force collision
+        Thread.yield();   // Try to force collision
         int newBalance = currentBalance + amount;
         balance = newBalance;
+        notifyAll();
     }
     
     @Override
     public String toString() {
         return String.format("Account[%d] balance %d", id, balance);
     }
-}
+    
+    
+    public synchronized void waitForAvailableFunds(int amount) {
+        while (myBank.isOpen() && amount >= balance) {
+            try {
+   		wait();
+            } catch (InterruptedException ex) { /*ignore*/ }
+        }
+    }
 
+}
 

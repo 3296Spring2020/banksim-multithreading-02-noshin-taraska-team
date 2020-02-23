@@ -1,4 +1,8 @@
 package edu.temple.cis.c3238.banksim;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * @author Cay Horstmann
  * @author Modified by Paul Wolfgang
@@ -20,36 +24,44 @@ class TransferThread extends Thread {
 
     @Override
     public void run() {
-        for (int i = 0; i < 10000; i++) {
+   
+        
+        
+        for (int i = 0; bank.isOpen() && i < 100000; i++) {
             int toAccount = (int) (bank.getNumAccounts() * Math.random());
             int amount = (int) (maxAmount * Math.random());
-            try{
-            bank.transfer(fromAccount, toAccount, amount);
-            doWait();
-            }catch (InterruptedException e){
-                
+            try {
+                bank.transfer(fromAccount, toAccount, amount);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TransferThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        bank.closeBank();
 
+
+       
+         
         System.out.printf("%-30s Account[%d] has finished with its transactions.\n", Thread.currentThread().toString(), fromAccount);
+        
+        
     }
+
     
     public void doWait(){
     synchronized(bank){
       try{
+        
         bank.wait();
       } catch(InterruptedException e){
       }
       }
     }
- 
-   
-   
-    public void doNotify(){
-    synchronized(bank){
-        bank.notifyAll();
-    }
-  }
-}
     
-
+    public void doNotify() {
+        synchronized (bank) {
+            System.out.println("2");
+            bank.notifyAll();
+        }
+    }
+}

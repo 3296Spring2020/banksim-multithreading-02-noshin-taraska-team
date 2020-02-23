@@ -11,20 +11,22 @@ class TestingThread extends Thread {
     private final Account[] accounts;
     private final int numAccounts;
     private final int initialBalance;
+    
 
     public TestingThread(Bank b, Account[] Bankaccounts, int numberAccounts, int InitialBalance) {
         bank = b;
         accounts = Bankaccounts;
         numAccounts = numberAccounts;
         initialBalance = InitialBalance;
+        
     }
 
     @Override
     public void run() {
-       
+        
         int totalBalance = 0;
         for (Account account : accounts) {
-            System.out.printf("%-30s %s%n",
+            System.out.printf("%-30s %s%n", 
                     Thread.currentThread().toString(), account.toString());
             totalBalance += account.getBalance();
         }
@@ -35,9 +37,9 @@ class TestingThread extends Thread {
         } else {
             System.out.printf("%-30s Total balance unchanged.\n", Thread.currentThread().toString());
         }
-       doNotify();
+       //doNotify();
     }
-   
+    
     public void doWait(){
     synchronized(bank){
       try{
@@ -46,9 +48,9 @@ class TestingThread extends Thread {
       }
       }
     }
- 
-   
-   
+  
+    
+    
     public void doNotify(){
     synchronized(bank){
         bank.notifyAll();
