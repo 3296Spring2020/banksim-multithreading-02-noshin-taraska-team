@@ -16,11 +16,14 @@ public class Bank {
     private final int initialBalance;
     private final int numAccounts;
     private boolean open = true;
+    public static boolean shouldBlock = false;
+    public static int num_blocked = 0;
 
     
     
 
     public Bank(int numAccounts, int initialBalance) {
+        open = true;
         this.initialBalance = initialBalance;
         this.numAccounts = numAccounts;
         accounts = new Account[numAccounts];
@@ -44,7 +47,16 @@ public class Bank {
     }
 
     public void transfer(int from, int to, int amount) throws  InterruptedException{
-        accounts[from].waitForAvailableFunds(amount);
+        
+        if(shouldBlock) {
+            synchronized(this) {
+                if(++num_blocked == numAccounts) {
+                    test();
+                }
+                this.wait();
+            }
+        }
+        //accounts[from].waitForAvailableFunds(amount);
         
       
        if (accounts[from].withdraw(amount)) {
@@ -53,10 +65,7 @@ public class Bank {
        
       
         // Uncomment line when race condition in test() is fixed.
-         //if (shouldTest()){
-             
-             //test();
-             
+         shouldTest();
          //}
     }
 
@@ -71,8 +80,13 @@ public class Bank {
     }
     
     
-    public boolean shouldTest() {
-        return ++numTransactions % NTEST == 0;
+    public synchronized boolean shouldTest() {
+        if(shouldBlock) return true;
+        if(++numTransactions % NTEST == 0) {
+            shouldBlock = true;
+            return true;
+        }
+        return false;
     }
     
 }

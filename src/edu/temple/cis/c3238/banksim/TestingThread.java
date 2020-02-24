@@ -37,7 +37,9 @@ class TestingThread extends Thread {
         } else {
             System.out.printf("%-30s Total balance unchanged.\n", Thread.currentThread().toString());
         }
-       //doNotify();
+        bank.num_blocked = 0;
+        bank.shouldBlock = false;
+        doNotify();
     }
     
     public void doWait(){

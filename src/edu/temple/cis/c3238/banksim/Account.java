@@ -58,7 +58,8 @@ public class Account {
     public synchronized void waitForAvailableFunds(int amount) {
         while (myBank.isOpen() && amount >= balance) {
             try {
-   		wait();
+                myBank.num_blocked++;
+   		myBank.wait();
             } catch (InterruptedException ex) { /*ignore*/ }
         }
     }
