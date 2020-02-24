@@ -27,7 +27,7 @@ class TransferThread extends Thread {
    
         
         
-        for (int i = 0; bank.isOpen() && i < 100000; i++) {
+        for (int i = 0; bank.isOpen() && i < 10000; i++) {
             int toAccount = (int) (bank.getNumAccounts() * Math.random());
             int amount = (int) (maxAmount * Math.random());
             try {

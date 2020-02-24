@@ -40,6 +40,7 @@ public class Bank {
     public void closeBank() {
         synchronized (this) {
             open = false;
+            this.notifyAll();
         }
         for (Account account : accounts) {
             synchronized (account) {account.notifyAll();}
@@ -48,6 +49,9 @@ public class Bank {
 
     public void transfer(int from, int to, int amount) throws  InterruptedException{
         
+        if(!open){
+            return;
+        }
         if(shouldBlock) {
             synchronized(this) {
                 if(++num_blocked == numAccounts) {
