@@ -36,14 +36,16 @@ I did task 2, 4, testing and worked on the README.
 
 ## Testing:
 
-## UML Sequence Diagram -Inital Race Condition
 
-## UML Sequence Diagram- Test() 
+
 
 
 ## Sequence UML Diagram
 
 ![](https://github.com/3296Spring2020/banksim-multithreading-02-noshin-taraska-team/blob/newBranch/lab5UML.PNG?raw=true)
+
+
+## UML Sequence Diagram- Test() 
 
 
 
