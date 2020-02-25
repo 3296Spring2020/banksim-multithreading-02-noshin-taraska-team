@@ -18,6 +18,7 @@ public class Bank {
     private boolean open = true;
     public static boolean shouldBlock = false;
     public static int num_blocked = 0;
+    public static int num_blocked2 = 0;
 
     
     
@@ -41,6 +42,7 @@ public class Bank {
         synchronized (this) {
             open = false;
             this.notifyAll();
+            //System.out.println("Bank closed");
         }
         for (Account account : accounts) {
             synchronized (account) {account.notifyAll();}
@@ -60,7 +62,12 @@ public class Bank {
                 this.wait();
             }
         }
-        //accounts[from].waitForAvailableFunds(amount);
+        
+        if(++num_blocked2 < numAccounts) {
+                    //System.out.println("\n Number Blocked: " + num_blocked2 + "\n");
+                    accounts[from].waitForAvailableFunds(amount);
+         }
+        
         
       
        if (accounts[from].withdraw(amount)) {
