@@ -38,7 +38,9 @@ I did task 2, 4, testing and worked on the README.
 
 ## Testing:
 Various manual tests were used to track threads and their progress. During testing I found that there was a problem with the way our task 3 and 4 solutions worked in conjunction. 
+
 Due to the placement of wait() in the solution for task 3, the program will get hung after trying to test() while there are accounts waiting for funds. I tried various solutions including moving the wait() to a location such that it would not be interfered by waitForSufficientFunds(). 
+
 I did the testing for both Sarah's and my associated code, and most of the testing was written after coding. 
 
 
