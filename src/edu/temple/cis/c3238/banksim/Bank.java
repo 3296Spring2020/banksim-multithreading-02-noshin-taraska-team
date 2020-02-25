@@ -1,5 +1,7 @@
 package edu.temple.cis.c3238.banksim;
+
 import java.util.*;
+
 /**
  * @author Cay Horstmann
  * @author Modified by Paul Wolfgang
@@ -19,9 +21,8 @@ public class Bank {
     public static boolean shouldBlock = false;
     public static int num_blocked = 0;
     public static int num_blocked2 = 0;
-
-    
-    
+    public static boolean waitFunds = false;
+  
 
     public Bank(int numAccounts, int initialBalance) {
         open = true;
@@ -34,10 +35,17 @@ public class Bank {
         numTransactions = 0;
     }
 
+    public synchronized boolean isOpen() {
+        return open;
+    }
     
-    public synchronized boolean isOpen() {return open;}
-    
-    
+    public void incNumBlocked2(){
+        num_blocked2++;
+    }
+    public void decNumBlocked2(){
+        num_blocked2--;
+    }
+
     public void closeBank() {
         synchronized (this) {
             open = false;
@@ -45,59 +53,81 @@ public class Bank {
             //System.out.println("Bank closed");
         }
         for (Account account : accounts) {
-            synchronized (account) {account.notifyAll();}
+            synchronized (account) {
+                account.notifyAll();
+            }
         }
     }
 
-    public void transfer(int from, int to, int amount) throws  InterruptedException{
+    public void transfer(int from, int to, int amount) throws InterruptedException {
+
         
-        if(!open){
+        
+        
+        if(shouldBlock){
+            //System.out.println(" \n Should test here");
+        }
+        
+        if (!open) {
             return;
         }
-        if(shouldBlock) {
-            synchronized(this) {
-                if(++num_blocked == numAccounts) {
+        
+        accounts[from].waitForAvailableFunds(amount, to);
+        
+        
+        
+        if (shouldBlock) {
+            synchronized (this) {
+                //System.out.println("\n Num blocked: " + (num_blocked + 1) + "Num Blocked 2: " + num_blocked2 );
+                if (++num_blocked == numAccounts) {
                     test();
+                    
                 }
                 this.wait();
+                
             }
         }
         
-        if(++num_blocked2 < numAccounts) {
-                    //System.out.println("\n Number Blocked: " + num_blocked2 + "\n");
-                    accounts[from].waitForAvailableFunds(amount);
-         }
+
+        if (accounts[from].withdraw(amount)) {
+            accounts[to].deposit(amount);
+        }
         
-        
-      
-       if (accounts[from].withdraw(amount)) {
-        accounts[to].deposit(amount);
-       }
-       
-      
+
         // Uncomment line when race condition in test() is fixed.
-         shouldTest();
-         //}
+        shouldTest();
+        //}
     }
 
     public void test() {
+        //System.out.println("\n test() reached \n");
         Thread testThread = new TestingThread(this, this.accounts, this.numAccounts, this.initialBalance);
-         testThread.start();
-         
+        testThread.start();
+
     }
 
     public int getNumAccounts() {
         return numAccounts;
     }
-    
-    
+
     public synchronized boolean shouldTest() {
-        if(shouldBlock) return true;
-        if(++numTransactions % NTEST == 0) {
+        
+        
+        //System.out.println("\n shouldTest() reached");
+        if (shouldBlock) {
+            return true;
+        }
+        if (++numTransactions % NTEST == 0) {
             shouldBlock = true;
             return true;
         }
         return false;
     }
     
+    public Account[] returnAccounts(){
+        
+        return this.accounts;
+        
+    }
+
 }

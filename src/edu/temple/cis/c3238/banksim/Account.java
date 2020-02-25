@@ -32,18 +32,20 @@ public class Account {
     public synchronized boolean withdraw(int amount) {
         if (amount <= balance) {
             int currentBalance = balance;
-            //Thread.yield(); // Try to force collision
+            Thread.yield(); // Try to force collision
             int newBalance = currentBalance - amount;
             balance = newBalance;
             return true;
+            
         } else {
             return false;
         }
+        
     }
 
     public synchronized void deposit(int amount) {
         int currentBalance = balance;
-        //Thread.yield();   // Try to force collision
+        Thread.yield();   // Try to force collision
         int newBalance = currentBalance + amount;
         balance = newBalance;
         notifyAll();
@@ -55,16 +57,24 @@ public class Account {
     }
     
     
-    public synchronized void waitForAvailableFunds(int amount) {
+    public synchronized void waitForAvailableFunds(int amount, int to) throws InterruptedException {
+       
+        
+        myBank.incNumBlocked2();
+        
         while (myBank.isOpen() && amount >= balance) {
             
             
+            //System.out.println("\n Trying to get " + amount + "from account " + id + " Balance is: " + balance);
             
-                
-            this.wait();
-                
-           
+            
+            wait();
+            
+          
         }
+        
+        myBank.decNumBlocked2();
+        
     }
 
 }
