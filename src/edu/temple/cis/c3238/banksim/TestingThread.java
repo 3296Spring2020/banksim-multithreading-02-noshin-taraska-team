@@ -33,13 +33,15 @@ class TestingThread extends Thread {
         System.out.printf("%-30s Total balance: %d\n", Thread.currentThread().toString(), totalBalance);
         if (totalBalance != numAccounts * initialBalance) {
             System.out.printf("%-30s Total balance changed!\n", Thread.currentThread().toString());
-            System.exit(0);
+            //System.exit(0);
         } else {
             System.out.printf("%-30s Total balance unchanged.\n", Thread.currentThread().toString());
         }
         bank.num_blocked = 0;
         bank.shouldBlock = false;
+        
         doNotify();
+        
     }
     
     public void doWait(){

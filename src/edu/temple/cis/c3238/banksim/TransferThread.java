@@ -30,9 +30,11 @@ class TransferThread extends Thread {
         for (int i = 0; bank.isOpen() && i < 10000; i++) {
             int toAccount = (int) (bank.getNumAccounts() * Math.random());
             int amount = (int) (maxAmount * Math.random());
-            //System.out.println("From: " + fromAccount + "Amount: " + amount + "\n" );
+            
             try {
                 bank.transfer(fromAccount, toAccount, amount);
+                
+                //System.out.println("From: " + fromAccount + "Amount: " + amount + " To: " + toAccount);
             } catch (InterruptedException ex) {
                 
             }
