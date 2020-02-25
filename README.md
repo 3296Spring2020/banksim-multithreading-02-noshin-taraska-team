@@ -1,7 +1,7 @@
 # BankSim
 
 ## Requirements:
-In this program we are supposed to protect a critical part of the code and resolve a race condition. Since threads were being run in parallel, they would be preempted by other threads causing race conditions. We solved this by creating synchronized methods inside the Account class which acts as a lock for the object. This way, while a thread is depositing or withdrawing, other threads will be blocked until the transaction is complete. This allows for parallel transactions for unrelated accounts. We also used locks on the bank for the test method that prevented transactions to occur while the test thread was being run. All requirements for this assignment have been completed.
+In this program we are supposed to protect a critical part of the code and resolve a race condition. Since threads were being run in parallel, they would be preempted by other threads causing race conditions. We solved this by creating synchronized methods inside the Account class which acts as a lock for the object. This way, while a thread is depositing or withdrawing, other threads will be blocked until the transaction is complete. This allows for parallel transactions for unrelated accounts. We also used locks on the bank for the test method that prevented transactions to occur while the test thread was being run.
 
 
 ### TASK 1
@@ -46,10 +46,10 @@ I did the testing for both Sarah's and my associated code, and most of the testi
 
 ## Sequence UML Diagram
 
-![](https://github.com/3296Spring2020/banksim-multithreading-02-noshin-taraska-team/blob/newBranch/lab5UML.PNG?raw=true)
+![](https://github.com/3296Spring2020/banksim-multithreading-02-noshin-taraska-team/blob/master/lab5UML.PNG?raw=true)
 
 
 ## UML Sequence Diagram- Test() 
-![](https://github.com/3296Spring2020/banksim-multithreading-02-noshin-taraska-team/blob/newBranch/lab5_updated.PNG?raw=true)
+![](https://github.com/3296Spring2020/banksim-multithreading-02-noshin-taraska-team/blob/master/lab5_updated.PNG?raw=true)
 
 
