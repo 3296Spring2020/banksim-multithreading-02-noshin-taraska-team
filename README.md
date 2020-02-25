@@ -19,6 +19,8 @@ method as synchronized. This placed a lock on the individual account object whic
 In the Bank class, the shouldTest method sets a variable named shouldBlock that indicates to the threads that they should wait on bank. The num_blocked variable indicates the number of threads that have been blocked. The final thread to block first calls the test method which launches a test thread to perform the testing. Once the testing is done, the thread calls notifyAll on the bank to wake all the threads up. It resets shouldBlock and num_blocked.
 
 ### TASK 4
+waitForSufficientFunds() is called in the beginning of the transfer() method before any transfers take place. 
+If a thread needs to wait for available funds into the associated account, it will use wait() in the waitForSufficientFunds() method until it is notified by a notifyAll() call in the account's deposit() method. At this moment it releases itself from the wait() and moves on to transfer the funds. 
 
 
 ### TASK 5
@@ -35,9 +37,11 @@ I did task 1, 3, 5 and worked on the README.
 I did task 2, 4, testing and worked on the README.
 
 ## Testing:
+Various manual tests were used to track threads and their progress. During testing I found that there was a problem with the way our task 3 and 4 solutions worked in conjunction. 
 
+Due to the placement of wait() in the solution for task 3, the program will get hung after trying to test() while there are accounts waiting for funds. I tried various solutions including moving the wait() to a location such that it would not be interfered by waitForSufficientFunds(). 
 
-
+I did the testing for both Sarah's and my associated code, and most of the testing was written after coding. 
 
 
 ## Sequence UML Diagram
