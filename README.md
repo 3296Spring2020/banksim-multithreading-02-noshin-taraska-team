@@ -46,6 +46,6 @@ I did task 2, 4, testing and worked on the README.
 
 
 ## UML Sequence Diagram- Test() 
-
+![](https://github.com/3296Spring2020/banksim-multithreading-02-noshin-taraska-team/blob/newBranch/lab5_updated.PNG?raw=true)
 
 
